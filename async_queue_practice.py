@@ -6,10 +6,12 @@ import time
 
 
 async def makeitem(size: int = 5) -> str:
+    """make random item representing some information in programm model"""
     return os.urandom(size).hex()
 
 
 async def randsleep(caller=None) -> None:
+    """make radnom delays representing delays in programm model """
     i = random.randint(0, 10)
     if caller:
         print(f"{caller} sleeping for {i} seconds.")
@@ -17,6 +19,7 @@ async def randsleep(caller=None) -> None:
     
 
 async def produce(name: int, q: asyncio.Queue) -> None:
+    """adding random item form makeintem to queue like in ouer theoretical programm"""
     n = random.randint(0, 10)
     for _ in it.repeat(None, n):  # Synchronous loop for each single producer
         await randsleep(caller=f"Producer {name}")
@@ -27,6 +30,7 @@ async def produce(name: int, q: asyncio.Queue) -> None:
 
 
 async def consume(name: int, q: asyncio.Queue) -> None:
+    """consuming item from queue last one form the queue. it represents real client request"""
     while True:
         await randsleep(caller=f"Consumer {name}")
         i, t = await q.get()
@@ -37,6 +41,7 @@ async def consume(name: int, q: asyncio.Queue) -> None:
         
         
 async def main(nprod: int, ncon: int):
+    "Creates tasks for producers and consumers "
     q = asyncio.Queue()
     producers = [asyncio.create_task(produce(n, q)) for n in range(nprod)]
     consumers = [asyncio.create_task(consume(n, q)) for n in range(ncon)]
